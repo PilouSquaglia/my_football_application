@@ -26,6 +26,11 @@ public class TeamController {
         teams.add(new Team(nextTeamId++, "Liverpool", "BPL"));
     }
 
+    @GetMapping("/all")
+    public List<Team> getAllTeams() {
+        return teams;
+    }
+
     @HystrixCommand(fallbackMethod = "getTeamByIdFallback")
     @GetMapping("/{id}")
     public Team getTeamById(@PathVariable int id) {
@@ -41,6 +46,7 @@ public class TeamController {
         return new Team(-1, "Équipe par défaut", "Division par défaut");
     }
 
+    @HystrixCommand(fallbackMethod = "createTeamFallback")
     @PostMapping
     public ResponseEntity<Team> createTeam(@RequestBody Team team) {
         team.setId(nextTeamId++);
@@ -48,6 +54,12 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.CREATED).body(team);
     }
 
+    public ResponseEntity<String> createTeamFallback(@RequestBody Team team) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de l'équipe");
+    }
+
+
+    @HystrixCommand(fallbackMethod = "updateTeamFallback")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTeam(@PathVariable int id, @RequestBody Team updatedTeam) {
         Optional<Team> existingTeam = teams.stream().filter(t -> t.getId() == id).findFirst();
@@ -57,10 +69,16 @@ public class TeamController {
             teamToUpdate.setDivision(updatedTeam.getDivision());
             return ResponseEntity.ok(teamToUpdate);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Équipe non trouvée");
+            throw new TeamNotFoundException("Équipe non trouvée avec l'ID : " + id);
         }
     }
 
+    public ResponseEntity<String> updateTeamFallback(@PathVariable int id, @RequestBody Team updatedTeam) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'équipe");
+    }
+
+
+    @HystrixCommand(fallbackMethod = "deleteTeamFallback")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable int id) {
         Optional<Team> team = teams.stream().filter(t -> t.getId() == id).findFirst();
@@ -68,8 +86,13 @@ public class TeamController {
             teams.remove(team.get());
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Équipe non trouvée");
+            throw new TeamNotFoundException("Équipe non trouvée avec l'ID : " + id);
         }
     }
+
+    public ResponseEntity<String> deleteTeamFallback(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la suppression de l'équipe");
+    }
+
 }
 
