@@ -1,19 +1,24 @@
-package com.example.teams_service.controller;
+package com.example.demo.controller;
 
-import com.example.teams_service.exception.TeamNotFoundException;
-import com.example.teams_service.model.Team;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
+import com.example.demo.exception.TeamNotFoundException;
+import com.example.demo.model.Team;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/teams")
-@Api(value = "Teams Management System", description = "Operations related to teams management")
+@RequestMapping(value = "/teams")
+@Tag(name = "Teams Management System", description = "Operations related to teams management")
 public class TeamController {
     private List<Team> teams = new ArrayList<>();
     private int nextTeamId = 1;
@@ -27,13 +32,13 @@ public class TeamController {
         teams.add(new Team(nextTeamId++, "Liverpool", "BPL"));
     }
 
-    @ApiOperation(value = "Get all teams", response = Team.class, tags = "getTeams")
+    @Operation(summary = "Get all teams", description = "Get a list of all teams.")
     @GetMapping("/all")
     public List<Team> getAllTeams() {
         return teams;
     }
 
-    @ApiOperation(value = "Get team by Id", response = Team.class, tags = "getTeamById")
+    @Operation(summary = "Get team by Id", description = "Get a team by its ID.")
     @HystrixCommand(fallbackMethod = "getTeamByIdFallback")
     @GetMapping("/{id}")
     public Team getTeamById(@PathVariable int id) {
@@ -45,11 +50,7 @@ public class TeamController {
         }
     }
 
-    public Team getTeamByIdFallback(int id) {
-        return new Team(-1, "Équipe par défaut", "Division par défaut");
-    }
-
-    @ApiOperation(value = "Create team", response = Team.class, tags = "createTeam")
+    @Operation(summary = "Create team", description = "Create a new team.")
     @HystrixCommand(fallbackMethod = "createTeamFallback")
     @PostMapping
     public ResponseEntity<Team> createTeam(@RequestBody Team team) {
@@ -58,11 +59,7 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.CREATED).body(team);
     }
 
-    public ResponseEntity<String> createTeamFallback(@RequestBody Team team) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de l'équipe");
-    }
-
-    @ApiOperation(value = "Update team", response = Team.class, tags = "updateTeam")
+    @Operation(summary = "Update team", description = "Update an existing team by its ID.")
     @HystrixCommand(fallbackMethod = "updateTeamFallback")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTeam(@PathVariable int id, @RequestBody Team updatedTeam) {
@@ -77,11 +74,7 @@ public class TeamController {
         }
     }
 
-    public ResponseEntity<String> updateTeamFallback(@PathVariable int id, @RequestBody Team updatedTeam) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'équipe");
-    }
-
-    @ApiOperation(value = "Delete team", response = Team.class, tags = "deleteTeam")
+    @Operation(summary = "Delete team", description = "Delete a team by its ID.")
     @HystrixCommand(fallbackMethod = "deleteTeamFallback")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable int id) {
@@ -93,10 +86,5 @@ public class TeamController {
             throw new TeamNotFoundException("Équipe non trouvée avec l'ID : " + id);
         }
     }
-
-    public ResponseEntity<String> deleteTeamFallback(@PathVariable int id) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la suppression de l'équipe");
-    }
-
 }
 

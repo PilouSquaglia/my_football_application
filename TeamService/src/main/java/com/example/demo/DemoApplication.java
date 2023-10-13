@@ -1,19 +1,17 @@
-package com.example.teams_service;
+package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 
-
 @SpringBootApplication
 @EnableCircuitBreaker
 @EnableHystrix
-@EnableHystrixDashboard
-public class TeamsServiceApplication {
+public class DemoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TeamsServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
 }

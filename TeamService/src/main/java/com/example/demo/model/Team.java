@@ -1,4 +1,4 @@
-package com.example.teams_service.model;
+package com.example.demo.model;
 
 public class Team {
     private int id;

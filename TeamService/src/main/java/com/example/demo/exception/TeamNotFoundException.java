@@ -1,4 +1,4 @@
-package com.example.teams_service.exception;
+package com.example.demo.exception;
 
 public class TeamNotFoundException extends RuntimeException {
 
