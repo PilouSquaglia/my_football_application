@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/teams")
+@Api(value = "Teams Management System", description = "Operations related to teams management")
 public class TeamController {
     private List<Team> teams = new ArrayList<>();
     private int nextTeamId = 1;
@@ -26,11 +27,13 @@ public class TeamController {
         teams.add(new Team(nextTeamId++, "Liverpool", "BPL"));
     }
 
+    @ApiOperation(value = "Get all teams", response = Team.class, tags = "getTeams")
     @GetMapping("/all")
     public List<Team> getAllTeams() {
         return teams;
     }
 
+    @ApiOperation(value = "Get team by Id", response = Team.class, tags = "getTeamById")
     @HystrixCommand(fallbackMethod = "getTeamByIdFallback")
     @GetMapping("/{id}")
     public Team getTeamById(@PathVariable int id) {
@@ -46,6 +49,7 @@ public class TeamController {
         return new Team(-1, "Équipe par défaut", "Division par défaut");
     }
 
+    @ApiOperation(value = "Create team", response = Team.class, tags = "createTeam")
     @HystrixCommand(fallbackMethod = "createTeamFallback")
     @PostMapping
     public ResponseEntity<Team> createTeam(@RequestBody Team team) {
@@ -58,7 +62,7 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de l'équipe");
     }
 
-
+    @ApiOperation(value = "Update team", response = Team.class, tags = "updateTeam")
     @HystrixCommand(fallbackMethod = "updateTeamFallback")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTeam(@PathVariable int id, @RequestBody Team updatedTeam) {
@@ -77,7 +81,7 @@ public class TeamController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'équipe");
     }
 
-
+    @ApiOperation(value = "Delete team", response = Team.class, tags = "deleteTeam")
     @HystrixCommand(fallbackMethod = "deleteTeamFallback")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable int id) {

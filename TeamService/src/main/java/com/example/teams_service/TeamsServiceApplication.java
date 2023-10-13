@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 @SpringBootApplication
 @EnableCircuitBreaker
 @EnableHystrix
+@EnableHystrixDashboard
 public class TeamsServiceApplication {
 
 	public static void main(String[] args) {
