@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stat-service
+spec:
+  replicas: 3
+  selector:
+    statLabels:
+      app: stat-service
+  template:
+    metadata:
+      labels:
+        app: stat-service
+    spec:
+      containers:
+        - name: stat-service
+          image: stat-service:latest
+          ports:
+            - containerPort: 8014

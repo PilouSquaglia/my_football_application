@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: match-service
+  template:
+    metadata:
+      labels:
+        app: match-service
+    spec:
+      containers:
+        - name: match-service
+          image: match-service:latest
+          ports:
+            - containerPort: 8013

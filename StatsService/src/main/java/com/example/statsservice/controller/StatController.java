@@ -58,7 +58,7 @@ public class StatController {
         }
         return team;
     }
-    
+
     public Team getTeamStatByIdFallback(int id) {
         return new Team(-1, "Équipe non trouvée", "Inconnu", -1);
     }
