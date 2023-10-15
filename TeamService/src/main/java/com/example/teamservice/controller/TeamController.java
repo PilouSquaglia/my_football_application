@@ -23,12 +23,14 @@ public class TeamController {
     private int nextTeamId = 1;
 
     public TeamController() {
-        System.out.println("nextTeamId: " + nextTeamId);
-        teams.add(new Team(nextTeamId++, "SCB", "Ligue 1"));
-        System.out.println("nextTeamId: " + nextTeamId);
-        teams.add(new Team(nextTeamId++, "AJB", "U19"));
-        System.out.println("nextTeamId: " + nextTeamId);
-        teams.add(new Team(nextTeamId++, "Liverpool", "BPL"));
+        teams.add(new Team(nextTeamId++, "SCB", "Ligue 1", 10000));
+        teams.add(new Team(nextTeamId++, "AJB", "U19", 0));
+        teams.add(new Team(nextTeamId++, "Liverpool", "BPL", 20));
+        teams.add(new Team(nextTeamId++, "Barcelone", "Liga", 99));
+        teams.add(new Team(nextTeamId++, "Real Madrid", "Liga", 10));
+        teams.add(new Team(nextTeamId++, "Corte", "N3", 23));
+        teams.add(new Team(nextTeamId++, "OM", "Ligue 2", 22));
+        teams.add(new Team(nextTeamId++, "PSG", "Ligue 2", 22));
     }
 
     @Operation(summary = "Get all teams", description = "Get a list of all teams.")
@@ -50,7 +52,7 @@ public class TeamController {
     }
 
     public Team getTeamByIdFallback(int id) {
-        return new Team(-1, "Équipe non trouvée", "Inconnu");
+        return new Team(-1, "Équipe non trouvée", "Inconnu", -1);
     }
 
     @Operation(summary = "Create team", description = "Create a new team.")
@@ -63,11 +65,11 @@ public class TeamController {
     }
 
     public ResponseEntity<Team> createTeamFallback(Team team) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Team(-1, "Erreur de création", "Inconnu"));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Team(-1, "Erreur de création", "Inconnu", -1));
     }
 
     @Operation(summary = "Update team", description = "Update an existing team by its ID.")
-//    @HystrixCommand(fallbackMethod = "updateTeamFallback")
+    @HystrixCommand(fallbackMethod = "updateTeamFallback")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTeam(@PathVariable int id, @RequestBody Team updatedTeam) {
         Optional<Team> existingTeam = teams.stream().filter(t -> t.getId() == id).findFirst();
@@ -75,6 +77,7 @@ public class TeamController {
             Team teamToUpdate = existingTeam.get();
             teamToUpdate.setName(updatedTeam.getName());
             teamToUpdate.setDivision(updatedTeam.getDivision());
+            teamToUpdate.setPoints(updatedTeam.getPoints());
             return ResponseEntity.ok(teamToUpdate);
         } else {
             throw new TeamNotFoundException("Équipe non trouvée avec l'ID : " + id);

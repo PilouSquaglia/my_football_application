@@ -1,17 +1,17 @@
-package com.example.demo.model;
+package com.example.playerservice.model;
 
-public class Team {
+public class Player {
     private int id;
     private String name;
-    private String division;
+    private String team;
 
-    public Team() {
+    public Player() {
     }
 
-    public Team(int id, String name, String division) {
+    public Player(int id, String name, String team) {
         this.id = id;
         this.name = name;
-        this.division = division;
+        this.team = team;
     }
 
     public int getId() {
@@ -30,12 +30,12 @@ public class Team {
         this.name = name;
     }
 
-    public String getDivision() {
-        return division;
+    public String getTeam() {
+        return team;
     }
 
-    public void setDivision(String division) {
-        this.division = division;
+    public void setTeam(String team) {
+        this.team = team;
     }
 }
 
