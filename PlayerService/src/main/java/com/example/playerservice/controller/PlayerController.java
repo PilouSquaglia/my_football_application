@@ -46,14 +46,15 @@ public class PlayerController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         for (Player player : players) {
-            int teamId = player.getTeamId();
-            String teamApiUrl = teamServiceUrl + "/teams/" + teamId;
-
             try {
-                String teamJson = restTemplate.getForObject(teamApiUrl, String.class);
-                Map<String, Object> teamData = objectMapper.readValue(teamJson, new TypeReference<Map<String, Object>>() {});
-                String teamName = (String) teamData.get("name");
-                player.setTeam(teamName);
+                int teamId = player.getTeamId();
+                String teamApiUrl = teamServiceUrl + "/teams/" + teamId;
+
+
+                    String teamJson = restTemplate.getForObject(teamApiUrl, String.class);
+                    Map<String, Object> teamData = objectMapper.readValue(teamJson, new TypeReference<Map<String, Object>>() {});
+                    String teamName = (String) teamData.get("name");
+                    player.setTeam(teamName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,10 +71,9 @@ public class PlayerController {
         ObjectMapper objectMapper = new ObjectMapper();
 
         Optional<Player> player = players.stream().filter(t -> t.getId() == id).findFirst();
-        int teamId = player.get().getTeamId();
-        String teamApiUrl = teamServiceUrl + "/teams/" + teamId;
-
         try {
+            int teamId = player.get().getTeamId();
+            String teamApiUrl = teamServiceUrl + "/teams/" + teamId;
             String teamJson = restTemplate.getForObject(teamApiUrl, String.class);
             Map<String, Object> teamData = objectMapper.readValue(teamJson, new TypeReference<Map<String, Object>>() {});
             String teamName = (String) teamData.get("name");
