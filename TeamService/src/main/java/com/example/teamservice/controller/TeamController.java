@@ -1,14 +1,14 @@
-package com.example.demo.controller;
+package com.example.teamservice.controller;
 
 
-import com.example.demo.exception.TeamNotFoundException;
-import com.example.demo.model.Team;
+import com.example.teamservice.exception.TeamNotFoundException;
+import com.example.teamservice.model.Team;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.Optional;
 @RequestMapping(value = "/teams")
 @Tag(name = "Teams Management System", description = "Operations related to teams management")
 public class TeamController {
+
     private List<Team> teams = new ArrayList<>();
     private int nextTeamId = 1;
 
