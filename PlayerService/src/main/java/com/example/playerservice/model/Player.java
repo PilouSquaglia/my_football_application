@@ -3,15 +3,16 @@ package com.example.playerservice.model;
 public class Player {
     private int id;
     private String name;
+    private int teamId;
     private String team;
 
     public Player() {
     }
 
-    public Player(int id, String name, String team) {
+    public Player(int id, String name, int teamId) {
         this.id = id;
         this.name = name;
-        this.team = team;
+        this.teamId = teamId;
     }
 
     public int getId() {
@@ -30,6 +31,14 @@ public class Player {
         this.name = name;
     }
 
+    public int getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
+    }
+
     public String getTeam() {
         return team;
     }
@@ -38,6 +47,3 @@ public class Player {
         this.team = team;
     }
 }
-
-
-

@@ -1,8 +1,8 @@
-package com.example.demo.exception;
+package com.example.playerservice.exception;
 
-public class TeamNotFoundException extends RuntimeException {
+public class PlayerNotFoundException extends RuntimeException {
 
-    public TeamNotFoundException(String message) {
+    public PlayerNotFoundException(String message) {
         super(message);
     }
 }
